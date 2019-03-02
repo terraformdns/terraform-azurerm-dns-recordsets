@@ -105,8 +105,8 @@ resource "azurerm_dns_mx_record" "this" {
   dynamic "record" {
     for_each = mx_recordsets[count.index].records
     content {
-      preference = split(record.value, " ")[0]
-      exchange   = split(record.value, " ")[1]
+      preference = split(" ", record.value)[0]
+      exchange   = split(" ", record.value)[1]
     }
   }
 }
@@ -145,10 +145,10 @@ resource "azurerm_dns_srv_record" "this" {
   dynamic "record" {
     for_each = srv_recordsets[count.index].records
     content {
-      priority = split(record.value, " ")[0]
-      weight   = split(record.value, " ")[1]
-      port     = split(record.value, " ")[2]
-      target   = split(record.value, " ")[3]
+      priority = split(" ", record.value)[0]
+      weight   = split(" ", record.value)[1]
+      port     = split(" ", record.value)[2]
+      target   = split(" ", record.value)[3]
     }
   }
 }
