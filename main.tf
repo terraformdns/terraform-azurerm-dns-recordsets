@@ -66,7 +66,11 @@ resource "azurerm_dns_a_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.a_recordsets[count.index].name, "@")
+  name = (
+    local.a_recordsets[count.index].name != "" ?
+    local.a_recordsets[count.index].name :
+    "@"
+  )
   ttl     = local.a_recordsets[count.index].ttl
   records = local.a_recordsets[count.index].records
 }
@@ -77,7 +81,11 @@ resource "azurerm_dns_aaaa_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.aaaa_recordsets[count.index].name, "@")
+  name = (
+    local.aaaa_recordsets[count.index].name != "" ?
+    local.aaaa_recordsets[count.index].name :
+    "@"
+  )
   ttl     = local.aaaa_recordsets[count.index].ttl
   records = local.aaaa_recordsets[count.index].records
 }
@@ -88,7 +96,11 @@ resource "azurerm_dns_cname_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name   = coalesce(local.cname_records[count.index].name, "@")
+  name = (
+    local.cname_records[count.index].name != "" ?
+    local.cname_records[count.index].name :
+    "@"
+  )
   ttl    = local.cname_records[count.index].ttl
   record = local.cname_records[count.index].data
 }
@@ -99,8 +111,12 @@ resource "azurerm_dns_mx_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.mx_recordsets[count.index].name, "@")
-  ttl  = local.mx_recordsets[count.index].ttl
+  name = (
+    local.mx_recordsets[count.index].name != "" ?
+    local.mx_recordsets[count.index].name :
+    "@"
+  )
+  ttl = local.mx_recordsets[count.index].ttl
 
   dynamic "record" {
     for_each = local.mx_recordsets[count.index].records
@@ -117,7 +133,11 @@ resource "azurerm_dns_ns_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.ns_recordsets[count.index].name, "@")
+  name = (
+    local.ns_recordsets[count.index].name != "" ?
+    local.ns_recordsets[count.index].name :
+    "@"
+  )
   ttl     = local.ns_recordsets[count.index].ttl
   records = local.ns_recordsets[count.index].records
 }
@@ -128,7 +148,11 @@ resource "azurerm_dns_ptr_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.ptr_recordsets[count.index].name, "@")
+  name = (
+    local.ptr_recordsets[count.index].name != "" ?
+    local.ptr_recordsets[count.index].name :
+    "@"
+  )
   ttl     = local.ptr_recordsets[count.index].ttl
   records = local.ptr_recordsets[count.index].records
 }
@@ -139,7 +163,7 @@ resource "azurerm_dns_srv_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.srv_recordsets[count.index].name, "@")
+  name = local.srv_recordsets[count.index].name
   ttl  = local.srv_recordsets[count.index].ttl
 
   dynamic "record" {
@@ -159,8 +183,12 @@ resource "azurerm_dns_txt_record" "this" {
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.txt_recordsets[count.index].name, "@")
-  ttl  = local.txt_recordsets[count.index].ttl
+  name = (
+    local.txt_recordsets[count.index].name != "" ?
+    local.txt_recordsets[count.index].name :
+    "@"
+  )
+  ttl = local.txt_recordsets[count.index].ttl
 
   dynamic "record" {
     for_each = local.txt_recordsets[count.index].records
