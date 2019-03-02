@@ -16,7 +16,7 @@ data "azurerm_dns_zone" "example" {
 # Since the azurerm provider uses a separate resource type for each DNS record
 # type, we'll need to split up our input list.
 locals {
-  recordsets       = {for rs in var.recordsets : rs.type => rs ...}
+  recordsets       = { for rs in var.recordsets : rs.type => rs ... }
   a_recordsets     = lookup(local.recordsets, "A", [])
   aaaa_recordsets  = lookup(local.recordsets, "AAAA", [])
   cname_recordsets = lookup(local.recordsets, "CNAME", [])
