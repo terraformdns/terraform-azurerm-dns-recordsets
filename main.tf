@@ -29,14 +29,14 @@ locals {
   # Some of the resources only deal with one record at a time, and so we need
   # to flatten these.
   cname_records = flatten([
-    for rs in local.cname_recordsets : [
+    for rs in local.cname_recordsets : flatten([
       for r in rs.records : {
         name = rs.name
         type = rs.type
         ttl  = rs.ttl
         data = r
       }
-    ]
+    ])
   ])
 
   # With just our list splitting technique above, records of unsupported types
