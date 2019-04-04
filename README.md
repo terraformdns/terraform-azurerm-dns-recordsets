@@ -46,7 +46,7 @@ module "dns_records" {
       type    = "TXT"
       ttl     = 3600
       records = [
-        "\"v=spf1 ip4:192.0.2.3 include:backoff.${aws_route53_zone.example.name} -all\"",
+        "\"v=spf1 ip4:192.0.2.3 include:backoff.${azurerm_resource_group.example.name} -all\"",
       ]
     },
     {
