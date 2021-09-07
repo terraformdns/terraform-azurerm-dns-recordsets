@@ -61,7 +61,7 @@ locals {
 }
 
 resource "azurerm_dns_a_record" "this" {
-  count = for_each(local.a_recordsets)
+  count = length(local.a_recordsets)
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
