@@ -60,7 +60,7 @@ locals {
   ]
 }
 
-resource "azurerm_dns_a_record" "this" {
+resource "azurerm_dns_a_record" "name" {
   for_each = { for rs in local.a_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -71,7 +71,7 @@ resource "azurerm_dns_a_record" "this" {
   records = each.value.records
 }
 
-resource "azurerm_dns_aaaa_record" "this" {
+resource "azurerm_dns_aaaa_record" "name" {
   for_each = { for rs in local.aaaa_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -82,7 +82,7 @@ resource "azurerm_dns_aaaa_record" "this" {
   records = each.value.records
 }
 
-resource "azurerm_dns_cname_record" "this" {
+resource "azurerm_dns_cname_record" "name" {
   for_each = { for r in local.cname_records : r.name => r }
 
 
@@ -94,7 +94,7 @@ resource "azurerm_dns_cname_record" "this" {
   record = each.value.data
 }
 
-resource "azurerm_dns_mx_record" "this" {
+resource "azurerm_dns_mx_record" "name" {
   for_each = { for rs in local.mx_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -114,7 +114,7 @@ resource "azurerm_dns_mx_record" "this" {
   }
 }
 
-resource "azurerm_dns_ns_record" "this" {
+resource "azurerm_dns_ns_record" "name" {
   for_each = { for rs in local.ns_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -125,7 +125,7 @@ resource "azurerm_dns_ns_record" "this" {
   records = each.value.records
 }
 
-resource "azurerm_dns_ptr_record" "this" {
+resource "azurerm_dns_ptr_record" "name" {
   for_each = { for rs in local.ptr_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -136,7 +136,7 @@ resource "azurerm_dns_ptr_record" "this" {
   records = each.value.records
 }
 
-resource "azurerm_dns_srv_record" "this" {
+resource "azurerm_dns_srv_record" "name" {
   for_each = { for rs in local.srv_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
@@ -158,7 +158,7 @@ resource "azurerm_dns_srv_record" "this" {
   }
 }
 
-resource "azurerm_dns_txt_record" "this" {
+resource "azurerm_dns_txt_record" "name" {
   for_each = { for rs in local.txt_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name

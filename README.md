@@ -1,3 +1,5 @@
+This is a Fork as the original repo looked dead.
+
 # Azure DNS Recordsets Module
 
 This module manages DNS recordsets in a given Azure DNS zone. It is part of
@@ -100,3 +102,9 @@ of the underlying Terraform provider:
 - `PTR`
 - `SRV`
 - `TXT`
+
+## Changelog
+
+* Braking Changes
+
+  The Resource name is changed from `this` to `name` as it better reflects the output of the module.
