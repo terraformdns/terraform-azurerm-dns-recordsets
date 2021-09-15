@@ -16,7 +16,7 @@ data "azurerm_dns_zone" "example" {
 # Since the azurerm provider uses a separate resource type for each DNS record
 # type, we'll need to split up our input list.
 locals {
-  recordsets       = {for rs in var.recordsets : rs.type => rs ...}
+  recordsets       = { for rs in var.recordsets : rs.type => rs... }
   a_recordsets     = lookup(local.recordsets, "A", [])
   aaaa_recordsets  = lookup(local.recordsets, "AAAA", [])
   cname_recordsets = lookup(local.recordsets, "CNAME", [])
@@ -60,110 +60,115 @@ locals {
   ]
 }
 
-resource "azurerm_dns_a_record" "this" {
-  count = length(local.a_recordsets)
+resource "azurerm_dns_a_record" "name" {
+  for_each = { for rs in local.a_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.a_recordsets[count.index].name, "@")
-  ttl     = local.a_recordsets[count.index].ttl
-  records = local.a_recordsets[count.index].records
+  name    = coalesce(each.value.name, "@")
+  ttl     = each.value.ttl
+  records = each.value.records
 }
 
-resource "azurerm_dns_aaaa_record" "this" {
-  count = length(local.aaaa_recordsets)
+resource "azurerm_dns_aaaa_record" "name" {
+  for_each = { for rs in local.aaaa_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.aaaa_recordsets[count.index].name, "@")
-  ttl     = local.aaaa_recordsets[count.index].ttl
-  records = local.aaaa_recordsets[count.index].records
+  name    = coalesce(each.value.name, "@")
+  ttl     = each.value.ttl
+  records = each.value.records
 }
 
-resource "azurerm_dns_cname_record" "this" {
-  count = length(local.cname_records)
+resource "azurerm_dns_cname_record" "name" {
+  for_each = { for r in local.cname_records : r.name => r }
+
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name   = coalesce(local.cname_records[count.index].name, "@")
-  ttl    = local.cname_records[count.index].ttl
-  record = local.cname_records[count.index].data
+  name   = coalesce(each.value.name, "@")
+  ttl    = each.value.ttl
+  record = each.value.data
 }
 
-resource "azurerm_dns_mx_record" "this" {
-  count = length(local.mx_recordsets)
+resource "azurerm_dns_mx_record" "name" {
+  for_each = { for rs in local.mx_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.mx_recordsets[count.index].name, "@")
-  ttl  = local.mx_recordsets[count.index].ttl
+  name = coalesce(each.value.name, "@")
+  ttl  = each.value.ttl
 
   dynamic "record" {
-    for_each = mx_recordsets[count.index].records
+    for_each = [for line in each.value.records : {
+      clean_line = replace(line, "/\\s+/", " ")
+    }]
     content {
-      preference = split(record.value, " ")[0]
-      exchange   = split(record.value, " ")[1]
+      preference = split(" ", record.value.clean_line)[0]
+      exchange   = split(" ", record.value.clean_line)[1]
     }
   }
 }
 
-resource "azurerm_dns_ns_record" "this" {
-  count = length(local.ns_recordsets)
+resource "azurerm_dns_ns_record" "name" {
+  for_each = { for rs in local.ns_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.ns_recordsets[count.index].name, "@")
-  ttl     = local.ns_recordsets[count.index].ttl
-  records = local.ns_recordsets[count.index].records
+  name    = coalesce(each.value.name, "@")
+  ttl     = each.value.ttl
+  records = each.value.records
 }
 
-resource "azurerm_dns_ptr_record" "this" {
-  count = length(local.ptr_recordsets)
+resource "azurerm_dns_ptr_record" "name" {
+  for_each = { for rs in local.ptr_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name    = coalesce(local.ptr_recordsets[count.index].name, "@")
-  ttl     = local.ptr_recordsets[count.index].ttl
-  records = local.ptr_recordsets[count.index].records
+  name    = coalesce(each.value.name, "@")
+  ttl     = each.value.ttl
+  records = each.value.records
 }
 
-resource "azurerm_dns_srv_record" "this" {
-  count = length(local.srv_recordsets)
+resource "azurerm_dns_srv_record" "name" {
+  for_each = { for rs in local.srv_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.srv_recordsets[count.index].name, "@")
-  ttl  = local.srv_recordsets[count.index].ttl
+  name = coalesce(each.value.name, "@")
+  ttl  = each.value.ttl
 
   dynamic "record" {
-    for_each = srv_recordsets[count.index].records
+    for_each = [for line in each.value.records : {
+      clean_line = replace(line, "/\\s+/", " ")
+    }]
     content {
-      priority = split(record.value, " ")[0]
-      weight   = split(record.value, " ")[1]
-      port     = split(record.value, " ")[2]
-      target   = split(record.value, " ")[3]
+      priority = tonumber(split(" ", record.value.clean_line)[0])
+      weight   = tonumber(split(" ", record.value.clean_line)[1])
+      port     = tonumber(split(" ", record.value.clean_line)[2])
+      target   = split(" ", record.value.clean_line)[3]
     }
   }
 }
 
-resource "azurerm_dns_txt_record" "this" {
-  count = length(local.txt_recordsets)
+resource "azurerm_dns_txt_record" "name" {
+  for_each = { for rs in local.txt_recordsets : rs.name => rs }
 
   resource_group_name = data.azurerm_dns_zone.example.resource_group_name
   zone_name           = data.azurerm_dns_zone.example.name
 
-  name = coalesce(local.txt_recordsets[count.index].name, "@")
-  ttl  = local.txt_recordsets[count.index].ttl
+  name = coalesce(each.value.name, "@")
+  ttl  = each.value.ttl
 
   dynamic "record" {
-    for_each = txt_recordsets[count.index].records
+    for_each = each.value.records
     content {
       value = record.value
     }

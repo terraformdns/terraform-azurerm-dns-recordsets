@@ -1,3 +1,5 @@
+This is a Fork as the original repo looked dead.
+
 # Azure DNS Recordsets Module
 
 This module manages DNS recordsets in a given Azure DNS zone. It is part of
@@ -46,7 +48,7 @@ module "dns_records" {
       type    = "TXT"
       ttl     = 3600
       records = [
-        "\"v=spf1 ip4:192.0.2.3 include:backoff.${aws_route53_zone.example.name} -all\"",
+        "\"v=spf1 ip4:192.0.2.3 include:backoff.${azurerm_dns_zone.example.name} -all\"",
       ]
     },
     {
@@ -100,3 +102,9 @@ of the underlying Terraform provider:
 - `PTR`
 - `SRV`
 - `TXT`
+
+## Changelog
+
+* Braking Changes
+
+  The Resource name is changed from `this` to `name` as it better reflects the output of the module.
